@@ -185,8 +185,8 @@
 		//打地鼠
 		function mouseHit() {
 			for (let i = 0; i < mouses.length; i++) {
-				//鼠标抬起时触发事件
-				mouses[i].onmouseup = function() {
+				//鼠标单击时触发事件
+				mouses[i].onclick = function() {
 					// 当前对象的子节点的长度不为0时，触发老鼠被击中的操作，得分增加，否则得分减少，漏击增加
 					if (this.children.length != 0) {
 						setTimeout(function() {
