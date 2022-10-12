@@ -28,7 +28,7 @@
 			}
 
 			.mediumdiv {
-				width: 248px;
+				width: 305px;
 				height: 130px;
 				border: 1px solid black;
 				margin: 10px auto;
@@ -98,7 +98,7 @@
 			</table>
 		</div>
 		<div class="mediumdiv">
-			<span>击中30或漏击30或满是地鼠 结束</span>
+			<span>得分20游戏过关或漏击30，计时为0游戏失败</span>
 			<br />
 			<span> 计分：<span id="showSource"></span>分 </span>
 			<br />
@@ -110,10 +110,8 @@
 			<br />
 			<input id="myStartBtn" type="button" id="start" value="开始" onclick="startGame()" />
 			<input type="button" id="level" value="切换难度" onclick="myLevel()" />
-
 			<input type="button" id="over" value="结束" onclick="myOver()" />
 		</div>
-
 	</body>
 	<script>
 		let mylevel = document.getElementById('level')
@@ -131,14 +129,15 @@
 		let miss; //漏击
 		let mole; //随机数
 		let time; //倒计时
-		let level = 1; //难度等级
-		levels.innerHTML = level;
+		let level; //难度等级
 
 		//初始化游戏 
 		function myInit() { //准备工作 准备好图片对象 并且先统一隐藏起来 如果需要冒地鼠 找到对应的图片 控制显示就可以
 			difficulty = 1200;
 			disappear = 800;
 			time = 0;
+			level = 1
+			levels.innerHTML = level;
 			showTime.innerHTML = time;
 			miss = 0;
 			misss.innerHTML = miss;
@@ -159,12 +158,12 @@
 				myStartBtn.disabled = true
 				time--;
 				showTime.innerHTML = time;
-				//剩余时间小于0游戏结束，并初始化游戏
-				if (time <= 0) {
+				//剩余时间等于0游戏结束，并初始化游戏
+				if (time == 0) {
 					clearInterval(times)
 					clearInterval(showMousId)
 					myInit()
-					alert('游戏结束！')
+					alert('游戏失败！')
 				}
 			}, 1000)
 		}
@@ -189,13 +188,14 @@
 				mouses[i].onmouseup = function() {
 					// 当前对象的子节点的长度不为0时，触发老鼠被击中的操作，得分增加，否则得分减少，漏击增加
 					if (this.children.length != 0) {
+						source++
 						setTimeout(function() {
 							mouses[i].innerHTML = '<img src="imgs/02.jpg"/>'
 							setTimeout(function() {
 								mouses[i].innerHTML = ''
 							}, 300)
 						}, 300)
-						source++
+
 					} else {
 						source--
 						miss++
@@ -205,7 +205,7 @@
 						clearInterval(times)
 						clearInterval(showMousId)
 						myInit();
-						alert('游戏结束！漏击大于30！！')
+						alert('游戏失败！漏击大于30！！')
 					} else if (source > 30) {
 						clearInterval(times)
 						clearInterval(showMousId)
@@ -215,26 +215,29 @@
 						clearInterval(times)
 						clearInterval(showMousId)
 						myInit();
-						alert('游戏结束！当前分数小于30分：')
+						alert('游戏失败！当前分数小于30分：')
 					}
 					showSource.innerHTML = source
 					misss.innerHTML = miss
 				}
 			}
 		}
+
 		//切换难度 当前难度为1时单击切换为难度2，再次单击切换为难度1
 		function myLevel() {
 			if (level == 1) {
 				level = 2;
-				levels.innerHTML = 2;
-				difficulty = 500;
-				disappear = 400;
+				levels.innerHTML = level;
+				difficulty = 900;
+				disappear = 550;
 			} else if (level == 2) {
 				level = 1;
 				levels.innerHTML = level;
-				myInit();
+				difficulty = 1200;
+				disappear = 800;
 			}
 		}
+
 		//点击结束按钮 ，游戏结束
 		function myOver() {
 			clearInterval(times)
